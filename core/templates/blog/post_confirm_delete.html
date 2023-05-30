@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete {{object}}</title>
+</head>
+<body>
+ 
+        <form method="post">{% csrf_token %}
+          
+                <h3>Are you sure you want to delete "{{ object }}"?</h3>
+                {{ form }}
+                <button type="submit" class="btn btn-primary text-white">Confirm</button>
+                <a href="{% url 'post_detail' pk=post.id %}"><button type="button">Cancel</button></a>
+
+        </form>
+
+</body>
+</html>

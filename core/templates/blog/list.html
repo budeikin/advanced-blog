@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <h2>this is list of posts</h2>
+    {% for post in posts %}
+        <hr>
+        <h3>
+            <a href="{% url 'post_detail' pk=post.id%}">{{post.title}}</a>
+        </h3>
+        <p>{{ post.content }}</p>
+    {% endfor %}
+
+    <div>
+        <a href="{% url 'post-create' %}" class="btn btn-primary p-3 m-5">Add Post</a>
+    </div>
+
+    {% if is_paginated %}
+       <nav class="pagination-container fixed-bottom p-3 m-5">
+            {% if page_obj.has_previous %}
+            <a href="?page={{page_obj.previous_page_number}}" class="pagination-newer">previous</a>
+            {% endif %}
+    
+            {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+            <span class="pagination-inner">
+                <a href="#" class="pagination-active bg-dark text-white rounded-circle p-3">{{i}}</a>
+            </span>
+            {% else %}
+                <a href="?page={{ i }}" class="rounded-circle p-3">{{ i }}</a>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{page_obj.next_page_number}}" class="pagination-older">next</a>
+            {% endif %}
+       </nav>
+       
+
+    {% endif %}
+</body>
+</html>
