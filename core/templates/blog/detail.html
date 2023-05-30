@@ -13,7 +13,7 @@
    <div class="container">
         <div class="justify-content-center align-items-center">
                 <h5>{{post.content}}</h5>
-                <h3>{{post.author}}</h3>
+                <h3>{{post.author.first_name}} {{post.author.last_name}}</h3>
                 <h6>created time : {{post.created_date}}</h6>
 
                 <a href="{% url 'post-edit' pk=post.id%}" class="btn bg-primary text-white p-3 m-2">Edit</a>
