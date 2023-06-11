@@ -1,13 +1,14 @@
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from blog.models import Post
+from django.http import HttpResponse
 from blog.forms import CreatePostForm
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-# Create your views here.
 
 
 class PostList(LoginRequiredMixin ,ListView):
+
     # queryset = Post.objects.all()
     template_name = 'blog/list.html'
     context_object_name = 'posts'
@@ -17,6 +18,7 @@ class PostList(LoginRequiredMixin ,ListView):
         posts = Post.objects.filter(status=True).order_by('-id')
         return posts
     
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
