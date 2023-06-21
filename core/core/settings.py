@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # external apps
     'rest_framework',
     'django_filters',
+    'drf_yasg',
     # internal apps
     'accounts',
     'blog',
@@ -145,4 +146,8 @@ AUTH_USER_MODEL = 'accounts.User'
 #          'rest_framework.permissions.IsAuthenticated',
 #     ]
 # }
-REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' ,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 1
+}

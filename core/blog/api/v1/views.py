@@ -10,11 +10,12 @@ from .serializers import PostSerializer,CategorySerializer
 from ...models import Post,Category
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter,OrderingFilter
+from .pagination import ResultSetPagination
 
 
 # Class Base Views
 '''class PostList(APIView):
-    """ getting a list of post and creatind new posts"""
+    """ getting a list of post and creatind new posts""" 
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
@@ -115,9 +116,10 @@ def post_detail(request,id):
 class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = PostSerializer
+    pagination_class = ResultSetPagination
     queryset = Post.objects.filter(status=True)
     filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
-    filterset_fields=['categoy','author']
+    filterset_fields={'categoy':['exact','in'],'author':['exact']}
     search_fields = ['title']
     ordering_fields=['publishes_date']
 
