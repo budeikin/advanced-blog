@@ -114,7 +114,7 @@ def post_detail(request,id):
 # Example of ViewSets Views
 
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated,IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     pagination_class = ResultSetPagination
     queryset = Post.objects.filter(status=True)

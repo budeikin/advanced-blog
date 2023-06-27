@@ -3,9 +3,15 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-from .serializer import RegistrationSerializer
+# from rest_framework_simplejwt.views import TokenObtainPairView
+from accounts.models import Profile
+from .serializer import RegistrationSerializer,ChangePasswordSerializer,ProfileSerializer,CustomAuthTokenSerializer
+from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+
+User= get_user_model()
 
 class RegistrationApiView(generics.GenericAPIView):
     serializer_class = RegistrationSerializer
@@ -22,9 +28,21 @@ class RegistrationApiView(generics.GenericAPIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+class TestEmailView(generics.GenericAPIView):
+
+    def get(self,request,*args,**kwargs):
+        send_mail(
+            "Subject here",
+            "Here is the message.",
+            "from@example.com",
+            ["to@example.com"],
+            fail_silently=False,
+        )
+        return Response('email sent successfully')
+
 
 class CustomAuthToken(ObtainAuthToken):
-
+    serializer_class = CustomAuthTokenSerializer
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
@@ -44,3 +62,42 @@ class CustomDiscardAuthToken(APIView):
     def post(self,request):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# class CustomTokenObtainPairView(TokenObtainPairView):
+    # serializer_class = CustomTokenObtainPairSerializer
+
+
+class ChangePasswordAPIView(generics.GenericAPIView ):
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+    
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+             # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            return Response({'detail':'password changed successfully'},status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset,user=self.request.user)
+        return obj     
