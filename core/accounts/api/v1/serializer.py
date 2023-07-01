@@ -2,7 +2,7 @@ from rest_framework import serializers
 from accounts.models import User,Profile
 from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
-# from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -70,14 +70,14 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         return attrs
 
 
-# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    # def validate(self,attrs):
-    #     validated_data = super().validate(attrs)
-    #     if not self.user.is_verified:
-    #         raise serializers.ValidationError({'detail':'user is not verified'})
-    #     validated_data['email'] = self.user.email
-    #     validated_data['user_id'] = self.user.id
-    #     return validated_data
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self,attrs):
+        validated_data = super().validate(attrs)
+        if not self.user.is_verified:
+            raise serializers.ValidationError({'detail':'user is not verified'})
+        validated_data['email'] = self.user.email
+        validated_data['user_id'] = self.user.id
+        return validated_data
         
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -101,3 +101,19 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['id','first_name','last_name','email','image','description']
+
+
+class AbtivationResendSerializer(serializers.Serializer):
+    email = serializers.CharField(required=True)
+
+    def validate(self,attrs):
+        email = attrs.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'detail':'user does not exist'})
+        
+        if user.is_verified:
+            raise serializers.ValidationError({'detail':'this account already activated'})
+        attrs['user']=user
+        return super().validate(attrs)

@@ -1,6 +1,6 @@
 # general modules
 django==3.2
-# python-decouple==3.8
+python-decouple==3.8
 pillow
 djangorestframework
 
@@ -10,4 +10,5 @@ django-filter
 drf-yasg[validation]
 rest_framework_simplejwt
 
-# email
+# email thirdparty modules
+django-mail-templated
