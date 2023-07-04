@@ -1,0 +1,20 @@
+name: docker-compose CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup docker compose
+      run: docker-compose up -d
+    - name: run tests
+      run: docker-compose exec backend sh -c "pytest ."
