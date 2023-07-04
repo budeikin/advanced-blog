@@ -1,15 +1,15 @@
-from rest_framework.decorators import api_view,permission_classes, action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes, action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from blog.api.v1.permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
-from rest_framework import status,mixins,viewsets
+from rest_framework import status, mixins, viewsets
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView,ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from django.shortcuts import get_object_or_404
-from .serializers import PostSerializer,CategorySerializer
-from ...models import Post,Category
+from .serializers import PostSerializer, CategorySerializer
+from ...models import Post, Category
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter,OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .pagination import ResultSetPagination
 
 
@@ -29,15 +29,13 @@ from .pagination import ResultSetPagination
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)'''
-    
+
 '''
 class PostList(ListCreateAPIView):
     """ getting a list of post and creatind new posts"""
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)'''
-
-  
 
 
 '''
@@ -68,12 +66,11 @@ class PostDetail(APIView):
         
 '''
 
-'''class PostDetail(RetrieveUpdateDestroyAPIView):
+"""class PostDetail(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
-    queryset = Post.objects.filter(status=True)'''
+    queryset = Post.objects.filter(status=True)"""
 
-   
 
 # Function Base Views
 """
@@ -113,15 +110,17 @@ def post_detail(request,id):
 
 # Example of ViewSets Views
 
+
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     pagination_class = ResultSetPagination
     queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
-    filterset_fields={'categoy':['exact','in'],'author':['exact']}
-    search_fields = ['title']
-    ordering_fields=['publishes_date']
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {"categoy": ["exact", "in"], "author": ["exact"]}
+    search_fields = ["title"]
+    ordering_fields = ["publishes_date"]
+
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]

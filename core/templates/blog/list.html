@@ -14,13 +14,13 @@
     {% for post in posts %}
         <hr>
         <h3>
-            <a href="{% url 'post_detail' pk=post.id%}">{{post.title}}</a>
+            <a href="{% url 'blog:post-detail' pk=post.id%}">{{post.title}}</a>
         </h3>
         <p>{{ post.content }}</p>
     {% endfor %}
 
     <div>
-        <a href="{% url 'post-create' %}" class="btn btn-primary p-3 m-5">Add Post</a>
+        <a href="{% url 'blog:post-create' %}" class="btn btn-primary p-3 m-5">Add Post</a>
     </div>
 
     {% if is_paginated %}

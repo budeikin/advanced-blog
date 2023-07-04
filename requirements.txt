@@ -12,3 +12,9 @@ rest_framework_simplejwt
 
 # email thirdparty modules
 django-mail-templated
+
+# refactoring and tests
+black
+flake8
+pytest==7.4.0
+pytest-django==4.5.2
