@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg",
     "mail_templated",
+    "rest_framework_simplejwt",
     # internal apps
     "accounts",
     "blog",
@@ -166,3 +167,12 @@ EMAIL_HOST = "smtp4dev"
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
+
+# celry settings
+CELERY_BROKER_URL= 'redis://redis:6379/1'
+# CELERY_BEAT_SCHEDULE={
+#     'send_email':{
+#         'task':'accounts.tasks.sendMail',
+#         'schedule':4
+#     }
+# }
